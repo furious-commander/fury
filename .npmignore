@@ -3,3 +3,5 @@ test
 test-data
 .gitignore
 src
+tsconfig.json
+jest.config.js
