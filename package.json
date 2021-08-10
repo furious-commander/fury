@@ -1,0 +1,19 @@
+{
+    "name": "fury",
+    "version": "1.0.0",
+    "description": "",
+    "main": "lib/index.js",
+    "scripts": {
+        "build": "tsc && tsc --declaration",
+        "test": "jest"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/jest": "^26.0.24",
+        "jest": "^27.0.6",
+        "ts-jest": "^27.0.4",
+        "typescript": "^4.3.5"
+    }
+}
