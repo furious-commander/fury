@@ -1,15 +1,16 @@
 {
-    "name": "fury",
-    "version": "1.0.0",
+    "name": "madlad",
+    "version": "1.0.0-rc.0",
     "description": "",
     "main": "lib/index.js",
+    "types": "lib/index.d.ts",
     "scripts": {
         "build": "tsc && tsc --declaration",
         "test": "jest"
     },
     "keywords": [],
     "author": "",
-    "license": "ISC",
+    "license": "MIT",
     "devDependencies": {
         "@types/jest": "^26.0.24",
         "jest": "^27.0.6",
