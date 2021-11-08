@@ -5,3 +5,6 @@ test-data
 src
 tsconfig.json
 jest.config.js
+.eslintrc.js
+.prettierrc
+*.tgz
