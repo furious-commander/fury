@@ -7,12 +7,12 @@ parser.addGroup(new Group('advanced').withCommand(new Command('upload', null, nu
 setupTestData()
 
 it('should complete partial path for grouped command with sibling argument', async () => {
-    const suggestions = await parser.suggest('advanced upload test-d')
-    expect(suggestions).toHaveLength(1)
-    expect(suggestions[0]).toBe('test-data/')
+  const suggestions = await parser.suggest('advanced upload test-d')
+  expect(suggestions).toHaveLength(1)
+  expect(suggestions[0]).toBe('test-data/')
 })
 
 it('should complete empty path for grouped command with sibling argument', async () => {
-    const suggestions = await parser.suggest('advanced upload ')
-    expect(suggestions).toContain('test-data/')
+  const suggestions = await parser.suggest('advanced upload ')
+  expect(suggestions).toContain('test-data/')
 })
