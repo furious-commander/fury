@@ -203,10 +203,10 @@ function printOption(printer: Printer, option: Argument, padLength: number) {
   printNameMetaDescription(printer, name, meta, option.description)
 }
 
-function printArgument(printer: Printer, argument: Argument) {
+function printArgument(printer: Printer, argument: Argument, maxArgumentKeyLength: number) {
   const requiredString = argument.required ? 'required ' : ''
   const meta = `[${requiredString}${argument.type || 'string'}]`
-  printNameMetaDescription(printer, argument.key.padEnd(argument.key.length + EXTRA_SPACE), meta, argument.description)
+  printNameMetaDescription(printer, argument.key.padEnd(maxArgumentKeyLength + EXTRA_SPACE), meta, argument.description)
 }
 
 function printOptionFamily(printer: Printer, heading: string, items: Argument[]) {
@@ -258,12 +258,12 @@ export function printCommandUsage(
   const globalOptions = options.filter(option => option.global)
   printUsage(printer, application, undefined, command, commandArguments)
   printer.print('')
-
+  const maxArgumentKeyLength = getLongestKey(commandArguments)
   if (commandArguments.length) {
     printer.printHeading('Arguments:')
     printer.print('')
     for (const argument of commandArguments) {
-      printArgument(printer, argument)
+      printArgument(printer, argument, maxArgumentKeyLength)
     }
     printer.print('')
   }
