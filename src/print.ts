@@ -259,6 +259,7 @@ export function printCommandUsage(
   printUsage(printer, application, undefined, command, commandArguments)
   printer.print('')
   const maxArgumentKeyLength = getLongestKey(commandArguments)
+
   if (commandArguments.length) {
     printer.printHeading('Arguments:')
     printer.print('')

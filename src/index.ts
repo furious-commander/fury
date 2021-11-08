@@ -282,7 +282,7 @@ export function createParser(options?: {
     addCommand: (command: Command) => {
       commands.push(command)
     },
-    suggest: (line: string, offset = 0, trailing = '') => {
+    suggest: async (line: string, offset = 0, trailing = '') => {
       return suggest(line, offset, [...groups, ...commands], globalOptions, pathResolver, trailing)
     },
     parse: async (argv: string[]) => {

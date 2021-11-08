@@ -1,12 +1,12 @@
 {
-    "compilerOptions": {
-        "target": "ES6",
-        "lib": ["es2019"],
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "module": "CommonJS",
-        "rootDir": "src",
-        "outDir": "lib"
-    },
-    "exclude": ["node_modules", "lib"]
+  "compilerOptions": {
+    "target": "ES6",
+    "lib": ["es2019"],
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "module": "CommonJS",
+    "rootDir": "src",
+    "outDir": "lib"
+  },
+  "exclude": ["node_modules", "lib"]
 }
