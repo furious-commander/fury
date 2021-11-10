@@ -1,6 +1,8 @@
 import { homedir } from 'os'
 import { join } from 'path'
 
+export type Shell = 'fish' | 'bash' | 'zsh'
+
 const BASH_ZSH_TEMPLATE = `if type compdef &>/dev/null; then
     _$1() {
         local IFS=$'\\n'
@@ -42,7 +44,7 @@ function generateFishCompletion(command: string) {
   return FISH_TEMPLATE.replace(/\$1/g, name).replace(/\$2/g, command)
 }
 
-export function generateCompletion(command: string, shell: string): string | null {
+export function generateCompletion(command: string, shell: Shell): string | null {
   if (shell === 'fish') {
     return generateFishCompletion(command)
   }
@@ -58,32 +60,32 @@ export function generateCompletion(command: string, shell: string): string | nul
   return null
 }
 
-export function detectShell(string: string): string | null {
-  if (string.includes('fish')) {
+export function detectShell(shellString: string): Shell | null {
+  if (shellString.includes('fish')) {
     return 'fish'
   }
 
-  if (string.includes('zsh')) {
+  if (shellString.includes('zsh')) {
     return 'zsh'
   }
 
-  if (string.includes('bash')) {
+  if (shellString.includes('bash')) {
     return 'bash'
   }
 
   return null
 }
 
-export function getShellPaths(string: string): string[] | null {
-  if (string === 'fish') {
+export function getShellPaths(shell: Shell): string[] | null {
+  if (shell === 'fish') {
     return [join(homedir(), '.config/fish/config.fish')]
   }
 
-  if (string === 'zsh') {
+  if (shell === 'zsh') {
     return [join(homedir(), '.zshrc')]
   }
 
-  if (string === 'bash') {
+  if (shell === 'bash') {
     return [join(homedir(), '.bashrc'), join(homedir(), '.bash_profile')]
   }
 
