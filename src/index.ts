@@ -153,11 +153,19 @@ export function createParser(options?: {
         }
         const targets = findOptionTargets(context, option)
         for (const target of targets) {
-          if (target[option.key] !== undefined) {
-            return handleError(context, 'Option passed more than once: ' + option.key)
+          if (option.array) {
+            if (!target[option.key]) {
+              target[option.key] = []
+              context.sourcemap[option.key] = 'explicit'
+            }
+            ;(target[option.key] as (string | number | bigint | boolean)[]).push(parseResult.value)
+          } else {
+            if (target[option.key] !== undefined) {
+              return handleError(context, 'Option passed more than once: ' + option.key)
+            }
+            target[option.key] = parseResult.value
+            context.sourcemap[option.key] = 'explicit'
           }
-          target[option.key] = parseResult.value
-          context.sourcemap[option.key] = 'explicit'
         }
         i += parseResult.skip
       } else {
@@ -223,6 +231,11 @@ export function createParser(options?: {
     }
     for (const option of options) {
       const targets = findOptionTargets(context, option)
+      for (const target of targets) {
+        if (option.array && !target[option.key]) {
+          target[option.key] = []
+        }
+      }
 
       if (option.default !== undefined && (!option.conflicts || context.options[option.conflicts] === undefined)) {
         for (const target of targets) {

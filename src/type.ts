@@ -34,6 +34,7 @@ export interface Argument<T = unknown> {
   autocompletePath?: boolean
   handler?: () => void
   global?: boolean
+  array?: boolean
 }
 
 function prependName(group: Group, name: string) {
