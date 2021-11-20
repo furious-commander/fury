@@ -32,6 +32,7 @@ import {
   ParsedContext,
   Parser,
   Printer,
+  Profile,
 } from './type'
 
 function findOptionTargets(context: ParsedContext, option: Argument): Record<string, unknown>[] {
@@ -109,7 +110,7 @@ export function createParser(options?: {
   }
 
   // eslint-disable-next-line complexity
-  function populate(argv: string[], context: ParsedContext) {
+  function populate(argv: string[], context: ParsedContext, profile: Profile | null) {
     const sibling = context.command.sibling
       ? findCommandByFullPath(groups, commands, context.command.sibling)
       : undefined
@@ -229,6 +230,46 @@ export function createParser(options?: {
         }
       }
     }
+
+    if (profile) {
+      if (!profile.globalOptions) {
+        profile.globalOptions = {}
+      }
+
+      if (!profile[context.command.fullPath]) {
+        profile[context.command.fullPath] = {}
+      }
+      const activeProfile = { ...profile[context.command.fullPath], ...profile.globalOptions }
+      for (const key in activeProfile) {
+        if (key === 'globalOptions') {
+          continue
+        }
+
+        if (context.sourcemap[key] === 'explicit') {
+          continue
+        }
+        const option = options.find(x => x.key === key)
+
+        if (!option) {
+          continue
+        }
+
+        if (option.conflicts && ['explicit', 'profile'].includes(context.sourcemap[option.conflicts])) {
+          continue
+        }
+        const parseResult = parseValue(option, String(activeProfile[key]))
+
+        if (parseResult instanceof Error) {
+          context.profileErrors.push(parseResult.message)
+          continue
+        }
+        const targets = findOptionTargets(context, option)
+        for (const target of targets) {
+          target[option.key] = parseResult.value
+        }
+        context.sourcemap[key] = 'profile'
+      }
+    }
     for (const option of options) {
       const targets = findOptionTargets(context, option)
       for (const target of targets) {
@@ -298,12 +339,13 @@ export function createParser(options?: {
     suggest: async (line: string, offset = 0, trailing = '') => {
       return suggest(line, offset, [...groups, ...commands], globalOptions, pathResolver, trailing)
     },
-    parse: async (argv: string[]) => {
+    parse: async (argv: string[], profile: Profile | null = null) => {
       const context: Context = {
         options: {},
         arguments: {},
         sourcemap: {},
         argumentIndex: 0,
+        profileErrors: [],
       }
       const findResult = findGroupAndCommand(argv, groups, commands)
       context.group = findResult.group
@@ -344,7 +386,7 @@ export function createParser(options?: {
         return handleError(context, 'No command found!')
       }
 
-      return populate(argv, context as ParsedContext)
+      return populate(argv, context as ParsedContext, profile)
     },
   }
 }
