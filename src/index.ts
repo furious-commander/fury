@@ -232,6 +232,8 @@ export function createParser(options?: {
     }
 
     if (profile) {
+      profile = { ...profile }
+
       if (!profile.globalOptions) {
         profile.globalOptions = {}
       }
