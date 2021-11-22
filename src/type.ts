@@ -133,9 +133,10 @@ export interface Context {
   group?: Group | undefined
   options: Record<string, unknown>
   arguments: Record<string, unknown>
-  sourcemap: Record<string, 'default' | 'env' | 'explicit'>
+  sourcemap: Record<string, 'default' | 'env' | 'explicit' | 'profile'>
   sibling?: ParsedCommand
   argumentIndex: number
+  profileErrors: string[]
 }
 
 export type ParsedContext = Context & { command: Command }
@@ -149,7 +150,7 @@ export interface Application {
 
 export interface Parser {
   suggest(line: string, offset: number, trailing: string): Promise<string[]>
-  parse(argv: string[]): Promise<string | Context | { exitReason: string }>
+  parse(argv: string[], profile?: Profile): Promise<string | Context | { exitReason: string }>
   addGroup(group: Group): void
   addCommand(command: Command): void
   addGlobalOption(option: Argument): void
@@ -162,3 +163,5 @@ export interface Printer {
   formatDim(text: string): string
   formatImportant(text: string): string
 }
+
+export type Profile = Record<string, Record<string, unknown>>
